@@ -1,0 +1,23 @@
+SELECT * FROM tbm_registroestudiantes ORDER BY co_per
+
+--Cantidad total de estudiantes.
+SELECT a2.tx_nom, COUNT(a1.co_est) AS ne_canTotEst
+FROM tbm_registroestudiantes AS a1
+INNER JOIN tbm_periodos AS a2 ON (a1.co_per=a2.co_per)
+GROUP BY a2.tx_nom
+ORDER BY a2.tx_nom
+
+--Cantidad total de materias y estudiantes.
+SELECT a2.tx_nom, COUNT(a1.co_mat) AS ne_canTotMat
+, SUM(a1.ne_canTotEst) AS ne_canTotEst
+FROM
+(
+	SELECT co_per, co_mat, COUNT(*) AS ne_canTotEst
+	FROM tbm_registroestudiantes
+	GROUP BY co_per, co_mat
+	ORDER BY co_per, co_mat
+) AS a1
+INNER JOIN tbm_periodos AS a2 ON (a1.co_per=a2.co_per)
+GROUP BY a2.tx_nom
+ORDER BY a2.tx_nom
+
